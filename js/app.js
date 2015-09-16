@@ -25,16 +25,22 @@ $(document).ready(function(){
 		var boolTest = userinput;
 		var convertedNumber = +userinput;
 		var checkNaN = isNaN(convertedNumber);
-		// This "catches" strings & booleans
+		// "Catches" strings & booleans
 		if(checkNaN || typeof boolTest === "boolean") {
-			alert("That is not a number");
+			return false;
 		}
-		// This "catches" wrong sized numbers
+		// "Catches" wrong sized numbers
 		if(convertedNumber >= 101 || convertedNumber <= 0) {
-			alert("Please enter a number between 1- 100");
+			return false;
 		}
-		// clears form-field after each submission
-		$("form")[0].reset();
+		return true;
+	}
+
+	// Checking if guess was previsouly made
+	function alreadyGuessed(guess) {
+		if (guesses.indexOf(guess) === -1) {
+			return true;
+		}
 	}
 
 	// Pushes user's guess to array 
@@ -43,22 +49,34 @@ $(document).ready(function(){
 	}
 
 	// append to guess list
-	// function listAppender(lastestGuess) {
-	// 	alert("47");
-	// 	$("ul #guessList").append("<li>" + lastestGuess + "</li>"):
-	// }
+	function listAppender(lastestGuess) {
+		$("#guessList").append("<li>" + lastestGuess + "</li>");
+	}
 
 	$("form").on("submit",function(event){
 		event.preventDefault();
+
 		// Obtains value from text-field
 		userGuess = $("#userGuess").val();
-		// Screens for data type
-		checkInputType(userGuess);
+
+		// Ensures proper input
+		while (!(checkInputType(userGuess))) {
+			userGuess = +prompt("Please provide a whole integer from 1 -100");
+		}
+
+		// Prevents someone making the same guess twice
+		while (alreadyGuessed(userGuess)) {
+			userGuess = +prompt("Number already Guessed, try again");
+		}
+
 		// Pushes guesses to array
 		pushToArray(userGuess);
-		alert("58");
+
 		// Appends guess to html page
-		// listAppender(userGuess);
+		listAppender(userGuess);
+
+		// clears form-field after each submission
+		$("form")[0].reset();
 	});
 
 	$("a.new").click(function(){
@@ -87,11 +105,9 @@ $(document).ready(function(){
 });
 
 /* --- Program's orger/logic --- */
-// Screen User Input Types
-// Append user guess
-// Push to guesses array
-// prevent larger numbers appending to "guesses" arrray
-
+// guess number
+// prevent guessing the same number twice
+// Utilize more rigorous logic for screening user input
 
 /* --- Button Functionality Requirements --- */
 // Guess Button
@@ -119,8 +135,53 @@ $(document).ready(function(){
 
 
 
-
-
-
 // When the user guesses the secret number, the app lets them know, 
 // and they’ll have the option to start a new game
+/*
+
+input
+while(function determines if input is poor) {
+	uerInput = +prompt
+}
+continue with funciton
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var userGuess = "sdfdfg";
+
+function checkInputType(userinput) {
+	var boolTest = userinput;
+	var convertedNumber = +userinput;
+	var checkNaN = isNaN(convertedNumber);
+	// "Catches" strings & booleans
+	if(checkNaN || typeof boolTest === "boolean") {
+		return false;
+	}
+	// "Catches" wrong sized numbers
+	if(convertedNumber >= 101 || convertedNumber <= 0) {
+		return false;
+	}
+	return true;
+}
+
+while (!checkInputType(userGuess)) {
+    console.log("hey");
+}
+*/
