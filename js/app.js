@@ -17,8 +17,6 @@ $(document).ready(function(){
   	var userGuess;
   	// An array to store user's guesses
 	var guesses = [];
-  	var feedbackClone = $("#feedback").clone();
-	var countClone = $("#count").clone();
 	var secretNumber;
 
 	// Filter User Input Types
@@ -75,23 +73,31 @@ $(document).ready(function(){
 		}
 
 		if (secretNumber === guess) {
-		     $("#feedback").html("You guessed correctly! " + secretNumber + " is correct!");
+			alert("new game?")
+		    $("#feedback").html("You guessed correctly! " + secretNumber + " is correct!");
 		} else if (difference >= 50) {
-		     $("#feedback").html("You are " + highOrLow + " and ice cold");
+		    $("#feedback").html("You are " + highOrLow + " and ice cold");
 		} else if (difference >= 30 && difference < 50) {
-		     $("#feedback").html("You are " + highOrLow + " and cold");
+		    $("#feedback").html("You are " + highOrLow + " and cold");
 		} else if (difference >= 20 && difference < 30) {
-		     $("#feedback").html("You are " + highOrLow + " and warm");
+		    $("#feedback").html("You are " + highOrLow + " and warm");
 		} else if (difference >= 10 && difference < 20) {
-		     $("#feedback").html("You are " + highOrLow + " and hot");
+		    $("#feedback").html("You are " + highOrLow + " and hot");
 		} else {
-		     $("#feedback").html("You are " + highOrLow + " and very hot");
+		    $("#feedback").html("You are " + highOrLow + " and very hot");
 		}
 	}
 
 	// append to guess list
 	function listAppender(lastestGuess) {
 		$("#guessList").append("<li>" + lastestGuess + "</li>");
+	}
+
+	function newGame() {
+		guesses = [];
+		$("#feedback").html("Make your Guess!");
+		$("#guessList").empty();
+		$("#count").html(guesses.length);
 	}
 
 	$("form").on("submit",function(event){
@@ -122,15 +128,17 @@ $(document).ready(function(){
 		listAppender(userGuess);
 
 		// #feedback provides feedback
-		alert(secretNumber);
 		feedback(userGuess);
+
+		// #count - Number of guesses that have been made
+		$("#count").html(guesses.length);
 
 		// clears form-field after each submission
 		$("form")[0].reset();
 	});
 
 	$("a.new").click(function() {
-		alert(guesses);
+		newGame();
 	});
 
 	
