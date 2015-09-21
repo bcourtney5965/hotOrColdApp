@@ -15,37 +15,78 @@ $(document).ready(function(){
     //-------------------------------------------
   	/*--- Declaring var's & cloning some initial info for later re-setting ---*/
   	var userGuess;
+  	// An array to store user's guesses
+	var guesses = [];
   	var feedbackClone = $("#feedback").clone();
 	var countClone = $("#count").clone();
-	// An array to store user's guesses
-	var guesses = [];
+	var secretNumber;
 
 	// Filter User Input Types
-	function checkInputType(userinput) {
-		var boolTest = userinput;
-		var convertedNumber = +userinput;
-		var checkNaN = isNaN(convertedNumber);
-		// "Catches" strings & booleans
-		if(checkNaN || typeof boolTest === "boolean") {
-			return false;
-		}
-		// "Catches" wrong sized numbers
-		if(convertedNumber >= 101 || convertedNumber <= 0) {
-			return false;
-		}
-		return true;
-	}
+	function checkInput(userInput) {
+		var inputType, newNum;
+		// Filter User Input Types
+		inputType = (function (userInput) {
+			if (userInput !== undefined && userInput <= 100 && userInput >= 1) {
+				return true
+			}
+			return false;		
+		}(userInput));
 
-	// Checking if guess was previsouly made
-	function alreadyGuessed(guess) {
-		if (guesses.indexOf(guess) === -1) {
-			return true;
-		}
+		// Verify it wasn't already guessed
+		newNum = (function (userInput) {
+			if (guesses.indexOf(userInput) === -1) {
+				return true;
+			} else {
+				return false;
+			}
+		}(userInput));
+
+		return (inputType && newNum);
 	}
 
 	// Pushes user's guess to array 
 	function pushToArray(guess) {
 		guesses.push(guess);
+	}
+
+	// Function to get randomly generated secret number
+	function randomNumberGenerator() {
+		return Math.floor((Math.random() * 100) + 1);
+	}
+	secretNumber = randomNumberGenerator();
+
+	// #feedback div / hot or cold
+	function feedback(guess) {
+		var difference = Math.abs(secretNumber - guess);
+		var highOrLow = "";
+		// #feedback div / too low/too high
+		if (secretNumber !== guess) {
+			function tooLowOrHigh(guess) {
+				var output = "";
+				if (guess > secretNumber) {
+					output = "too high";
+				}
+				if (guess < secretNumber) {
+					output = "too low";
+				}
+				return output;
+			}
+			highOrLow = tooLowOrHigh(guess);
+		}
+
+		if (secretNumber === guess) {
+		     $("#feedback").html("You guessed correctly! " + secretNumber + " is correct!");
+		} else if (difference >= 50) {
+		     $("#feedback").html("You are " + highOrLow + " and ice cold");
+		} else if (difference >= 30 && difference < 50) {
+		     $("#feedback").html("You are " + highOrLow + " and cold");
+		} else if (difference >= 20 && difference < 30) {
+		     $("#feedback").html("You are " + highOrLow + " and warm");
+		} else if (difference >= 10 && difference < 20) {
+		     $("#feedback").html("You are " + highOrLow + " and hot");
+		} else {
+		     $("#feedback").html("You are " + highOrLow + " and very hot");
+		}
 	}
 
 	// append to guess list
@@ -57,17 +98,22 @@ $(document).ready(function(){
 		event.preventDefault();
 
 		// Obtains value from text-field
-		userGuess = $("#userGuess").val();
+		userGuess = +$("#userGuess").val();
 
-		// Ensures proper input
-		while (!(checkInputType(userGuess))) {
-			userGuess = +prompt("Please provide a whole integer from 1 -100");
+		// check user guess
+		while (!checkInput(userGuess)) {
+			userGuess = +prompt("Please try again");
 		}
 
-		// Prevents someone making the same guess twice
-		while (alreadyGuessed(userGuess)) {
-			userGuess = +prompt("Number already Guessed, try again");
-		}
+		// // Ensures proper input
+		// while (!(checkInputType(userGuess))) {
+		// 	userGuess = +prompt("Please provide a whole integer from 1 -100");
+		// }
+
+		// // Prevents someone making the same guess twice
+		// while (alreadyGuessed(userGuess)) {
+		// 	userGuess = +prompt("Number already guessed, try again");
+		// }
 
 		// Pushes guesses to array
 		pushToArray(userGuess);
@@ -75,37 +121,79 @@ $(document).ready(function(){
 		// Appends guess to html page
 		listAppender(userGuess);
 
+		// #feedback provides feedback
+		alert(secretNumber);
+		feedback(userGuess);
+
 		// clears form-field after each submission
 		$("form")[0].reset();
 	});
 
-	$("a.new").click(function(){
+	$("a.new").click(function() {
 		alert(guesses);
 	});
 
-	/*
-
-	// Function gets random number between 1 - 100
-	// And saved is to a variable
-	var secretNumber = (function() {
-		return Math.floor((Math.random() * 100) + 1);
-	}());
-
-	// Append user guess to website
-
-	// Push to guesses array
-	guesses.push($("#userGuess").val());
-
-	// Determine if Hot/Cold
-
-	// Determine if getting Hott(er)/Cold(er)
-
-	*/
+	
 
 });
+// enter a number
+
+// secret number
+
+// display hot/cold
+// display GETTING hotter/colder
+
+// push guess to array
+// append to guess webpage
+// alter number of guesses
+
+// clears form-field after each submission
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* --- Program's orger/logic --- */
-// guess number
+
+// prevent submitting ""
 // prevent guessing the same number twice
 // Utilize more rigorous logic for screening user input
 
@@ -128,60 +216,23 @@ $(document).ready(function(){
 
 
 
-
-
-
-
-
-
-
-// When the user guesses the secret number, the app lets them know, 
-// and they’ll have the option to start a new game
 /*
 
-input
-while(function determines if input is poor) {
-	uerInput = +prompt
-}
-continue with funciton
+	// Function gets random number between 1 - 100
+	// And saved is to a variable
+	var secretNumber = (function() {
+		return Math.floor((Math.random() * 100) + 1);
+	}());
+
+	// Append user guess to website
+
+	// Push to guesses array
+	guesses.push($("#userGuess").val());
+
+	// Determine if Hot/Cold
+
+	// Determine if getting Hott(er)/Cold(er)
+
+	*/
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var userGuess = "sdfdfg";
-
-function checkInputType(userinput) {
-	var boolTest = userinput;
-	var convertedNumber = +userinput;
-	var checkNaN = isNaN(convertedNumber);
-	// "Catches" strings & booleans
-	if(checkNaN || typeof boolTest === "boolean") {
-		return false;
-	}
-	// "Catches" wrong sized numbers
-	if(convertedNumber >= 101 || convertedNumber <= 0) {
-		return false;
-	}
-	return true;
-}
-
-while (!checkInputType(userGuess)) {
-    console.log("hey");
-}
-*/
