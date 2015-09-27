@@ -55,56 +55,59 @@ $(document).ready(function(){
 	}
 	secretNumber = randomNumberGenerator();
 
+	// #feedback div
+	// too low/too high
+	function tooLowOrHigh(guess) {
+		var output = "";
+		if (guess > secretNumber) {
+			output = "too high";
+		}
+		if (guess < secretNumber) {
+			output = "too low";
+		}
+		return output;
+	}
+
+	// #feedback div
+	// getting hotter/colder relative to last guess
+	function gettingHotterColder() {
+		var output = "";
+		var prevGuess = guesses.length - 2;
+		var currGuess = guesses.length - 1;
+		var prevGuessDist = Math.abs(secretNumber - guesses[prevGuess]);
+		var currGuessDist = Math.abs(secretNumber - guesses[currGuess]);
+		if (currGuessDist < prevGuessDist) {
+			output = " and getting hotter";
+		} else if (currGuessDist > prevGuessDist) {
+			output = " and getting colder";
+		} else {
+			output = "";
+		}
+		return output;
+	}
+
 	// #feedback div / hot or cold
 	function feedback(guess) {
 		var difference = Math.abs(secretNumber - guess);
-		var highOrLow = "";
+		var highOrLow = tooLowOrHigh(guess);
 		var closerFarther = "";
 
-		// #feedback div
-		// too low/too high
-		function tooLowOrHigh(guess) {
-			var output = "";
-			if (guess > secretNumber) {
-				output = "too high";
-			}
-			if (guess < secretNumber) {
-				output = "too low";
-			}
-			return output;
-		}
-
-		// #feedback div
-		// getting hotter/colder relative to last guess
-		function gettingHotterColder() {
-			var prevGuess = guesses.length - 2;
-			var currGuess = guesses.length - 1;
-			var prevGuessDist = Math.abs(secretNumber - guesses[prevGuess]);
-			var currGuessDist = Math.abs(secretNumber - guesses[currGuess]);
-			if (currGuessDist < prevGuessDist) {
-				closerFarther = " and getting hotter";
-			}
-			if (currGuessDist > prevGuessDist) {
-				closerFarther = " and getting colder";
-			}
-		}
-
 		if (guesses.length >= 2) {
-			gettingHotterColder();
+			closerFarther = gettingHotterColder();
 		}
 
 		if (secretNumber === guess) {
 		    $("#feedback").html("You guessed correctly! " + secretNumber + " is correct!");
 		} else if (difference >= 50) {
-		    $("#feedback").html("Your guess was " + tooLowOrHigh(guess) + "." + "  You are ice cold" + closerFarther + ".");
+		    $("#feedback").html("Your guess was " + highOrLow + "." + "  You are ice cold" + closerFarther + ".");
 		} else if (difference >= 30 && difference < 50) {
-		    $("#feedback").html("Your guess was " + tooLowOrHigh(guess) + "." + "  You are cold" + closerFarther + ".");
+		    $("#feedback").html("Your guess was " + highOrLow + "." + "  You are cold" + closerFarther + ".");
 		} else if (difference >= 20 && difference < 30) {
-		    $("#feedback").html("Your guess was " + tooLowOrHigh(guess) + "." + "  You are warm" + closerFarther + ".");
+		    $("#feedback").html("Your guess was " + highOrLow + "." + "  You are warm" + closerFarther + ".");
 		} else if (difference >= 10 && difference < 20) {
-		    $("#feedback").html("Your guess was " + tooLowOrHigh(guess) + "." + "  You are hot" + closerFarther + ".");
+		    $("#feedback").html("Your guess was " + highOrLow + "." + "  You are hot" + closerFarther + ".");
 		} else {
-		    $("#feedback").html("Your guess was " + tooLowOrHigh(guess) + "." + "  You are very hot" + closerFarther + ".");
+		    $("#feedback").html("Your guess was " + highOrLow + "." + "  You are very hot" + closerFarther + ".");
 		}
 	}
 
